@@ -1,0 +1,106 @@
+---
+title: "hm1"
+author: 'Jessie Bustin Github: jebustin'
+date: "1/15/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+```
+
+This homework is about syntax and basic plotting functions in R, and is **due by the end of Feb 7**. 
+
+You can use the RMarkDown file with these homework instructions as a template for your work. 
+Make sure to replace "Your Name" and "your_github_username" in the YAML with your name and Github username.
+
+**Submission instructions**: Create a folder named `ds202_hw2`, and name the RMarkDown file including your solutions `hw2.Rmd` under this folder. For submission, create a GitHub repository named `ds202_hw2` under your account, and push both `hw2.Rmd` and the knitted `hw2.html` to GitHub before the deadline. I will assume you use the same GitHub username as for your HW1 submission. The latest version of your homework appearing on GitHub before the deadline is graded. *It is crucial to follow the exact folder structure and file names*, so that your homework can be reproduced and graded by an automated script. Some questions will require the following answer format.
+
+## Example question and answer
+0\. What is the smallest positive odd integer? Storage it in a variable named `a0` and print it.
+
+**Example answer**:
+In the RMarkDown file, type in
+<pre><code>```{r}
+a0 <- 1
+a0
+```</code></pre>
+The knitted html file will show:
+```{r}
+a0 <- 1
+a0
+```
+
+## R commands
+1. Today's temperature has a high of 24 and a low of 15 degree fahrenheit.  Find the corresponding degress in celsius and storage it in a (single) vector named `cel`. Print the variable.
+```{r}
+far <- c(15, 25)
+cel <- (far - 30) / 2
+cel
+```
+
+2. Create a vector of length 200. The odd entries should be 3 and even entries should be 1. Storage the created in a variable named `vec200` and print.
+```{r}
+vec200 <- rep(c(3, 1), times = 100)
+vec200
+```
+
+3. How many perfect squares are there between 1 and 2001? Storage the answer in a  variable named `numPerfect` and print. You may want to look at `?round`.
+```{r}
+numPerfect = floor(sqrt(2001))
+numPerfect
+```
+
+## Cars and mileage
+For this part we will use the `mpg` data set, you can access the data by first installing (using `install.packages('ggplot2')`) and then loading the package `ggplot2` (using `library(ggplot2)`) into your R session. The `mpg` data includes information about fuel economy of popular car models
+for the years 1999 and 2008 as collected by the US Environmental Protection Agency. An answer should include a short paragraph of text for the explanation to a (human) reader, together with appropriate R code, outputs, and graphs.
+
+Most exercises are from the ggplot2 book section 2.2.1. You might find it helpful for working on the homework to read through this section. *However, all questions can be solved by using just the basic R graphics functions.*
+
+1. What are the 3 most fuel-efficient models in terms of highway mileage? Storage the data frame (with 3 rows) containing all information of these three cars in a variable named `top3` and print.
+```{r}
+mpgHwy <- mpg$hwy
+mpgSorted = mpg[order(mpgHwy),]
+mpgSorted[1:4,]
+```
+2. How many different compact models are included in this dataset? Storage the answer in  a variable named `numCompact` and print.
+```{r}
+mpgCompact <- mpg[mpg$class == 'compact',]
+numCompact <- length(unique(mpgCompact$model))
+numCompact
+```
+3. Create a scatterplot of `hwy` and `cty` and describe the relationship. Why are there so few points visible? Explain your findings.
+```{r}
+plot(mpg$hwy, mpg$cty)
+```
+The relationship between highway and city mpg is strong, linear, and in the positive direction with a few potential outliers on the high end in the x and y direction.  There are a limited number of points visible compared to the data set size because there is probably a lot of overlap in the center cluster of the graph.  This means that many points are on top of each other.
+
+4. Are cars in 2008 more fuel efficient than cars in 1999? Use graphs *and* summary statistics to answer this question. Explain your findings.
+
+To answer this question I think it is important to look at both highway and city miles seperately because different drivers have different driving habits.
+
+```{r}
+mpg20081999 <- mpg[mpg$year == '2008'| mpg$year == '1999',]
+boxplot(cty~year, data = mpg20081999)
+```
+
+```{r}
+boxplot(hwy~year, data = mpg20081999)
+```
+
+Based on the side by side box plots it does not appear that the sample of cars in this dataset shows an improvement in gas mileage either for highway or city miles based on the medians.   Let's further investigate...
+
+```{r}
+mpg2008 <- mpg[mpg$year == '2008',]
+mpg1999 <- mpg[mpg$year == '1999',]
+summary(mpg2008$cty)
+summary(mpg1999$cty)
+summary(mpg2008$hwy)
+summary(mpg1999$hwy)
+```
+
+The means and medians for highway and city miles per gallon are relatively similiar between 1999 and 2008 I would conclude that the cars in this dataset did not have a significant change in gas mileage during this time period.  A hypothesis test to compare means would need to be conducted to verify.  Also, while this is true for the cars in this data set it might not be true for all cars.  I would also be curious to see the trend over time as I hope they have improved since 2008!
+
+
+Note: your submission is supposed to be fully reproducible, i.e. the TA and I will 'knit' your submission. Make sure that you don't use any file structure that depends on your computing environment.
