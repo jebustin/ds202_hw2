@@ -7,6 +7,9 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+if (!require("ggplot2")) {
+install.packages("ggplot2")
+}
 library(ggplot2)
 ```
 
@@ -61,9 +64,12 @@ Most exercises are from the ggplot2 book section 2.2.1. You might find it helpfu
 1. What are the 3 most fuel-efficient models in terms of highway mileage? Storage the data frame (with 3 rows) containing all information of these three cars in a variable named `top3` and print.
 ```{r}
 mpgHwy <- mpg$hwy
-mpgSorted = mpg[order(mpgHwy),]
-mpgSorted[1:4,]
+mpgSorted = mpg[order(mpgHwy, decreasing = TRUE),]
+mpgSorted[1:3,]
 ```
+
+The three most fuel-efficient car models in this dataframe in terms of highway miles are the jetta, new beetle automatic, and new beetle manual.
+
 2. How many different compact models are included in this dataset? Storage the answer in  a variable named `numCompact` and print.
 ```{r}
 mpgCompact <- mpg[mpg$class == 'compact',]
@@ -72,8 +78,9 @@ numCompact
 ```
 3. Create a scatterplot of `hwy` and `cty` and describe the relationship. Why are there so few points visible? Explain your findings.
 ```{r}
-plot(mpg$hwy, mpg$cty)
+plot(mpg$hwy, mpg$cty, main = "Highway v City MPG", xlab = "Hichway MPG", ylab = "City MPG")
 ```
+
 The relationship between highway and city mpg is strong, linear, and in the positive direction with a few potential outliers on the high end in the x and y direction.  There are a limited number of points visible compared to the data set size because there is probably a lot of overlap in the center cluster of the graph.  This means that many points are on top of each other.
 
 4. Are cars in 2008 more fuel efficient than cars in 1999? Use graphs *and* summary statistics to answer this question. Explain your findings.
@@ -82,11 +89,11 @@ To answer this question I think it is important to look at both highway and city
 
 ```{r}
 mpg20081999 <- mpg[mpg$year == '2008'| mpg$year == '1999',]
-boxplot(cty~year, data = mpg20081999)
+boxplot(cty~year, data = mpg20081999, main = "City MPG for 1999 & 2008", ylab = "City MPG")
 ```
 
 ```{r}
-boxplot(hwy~year, data = mpg20081999)
+boxplot(hwy~year, data = mpg20081999, main = "Highway MPG for 1999 & 2008", ylab = "Highway MPG")
 ```
 
 Based on the side by side box plots it does not appear that the sample of cars in this dataset shows an improvement in gas mileage either for highway or city miles based on the medians.   Let's further investigate...
